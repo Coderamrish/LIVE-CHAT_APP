@@ -11,40 +11,39 @@ const io = new Server(server);
 
 app.use(express.static("public"));
 
-// Create 'uploads' folder if it doesn't exist
+// Ensure the upload directory exists
 const uploadDir = path.join(__dirname, "public/uploads");
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
+if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
 
-// Multer storage configuration
+// Configure multer storage
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "public/uploads");
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname);
+  destination: (req, file, cb) => cb(null, "public/uploads"),
+  filename: (req, file, cb) => cb(null, Date.now() + "-" + file.originalname),
+});
+
+const upload = multer({
+  storage,
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = ["image/png", "image/jpeg", "image/jpg", "audio/webm"];
+    if (allowedTypes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error("Invalid file type"), false);
+    }
   },
 });
 
-const upload = multer({ storage });
-
 let users = {};
-let servers = {
-  "Server 1": [],
-  "Server 2": [],
-};
+let servers = { "Server 1": [], "Server 2": [] };
 
 io.on("connection", (socket) => {
   console.log("A user connected:", socket.id);
 
   socket.on("joinServer", ({ username, server }) => {
     if (!servers[server]) {
-      socket.emit("joinError", `Server "${server}" does not exist.`);
-      return;
+      return socket.emit("joinError", `Server "${server}" does not exist.`);
     }
 
-    // Remove user from previous server if they switch
     if (users[socket.id]) {
       let prevServer = users[socket.id].server;
       servers[prevServer] = servers[prevServer].filter(user => user !== users[socket.id].username);
@@ -52,61 +51,47 @@ io.on("connection", (socket) => {
       socket.leave(prevServer);
     }
 
-    // Check if username is taken
-    if (servers[server].includes(username)) {
-      socket.emit("joinError", "Username already taken in this server.");
-      return;
-    }
-
     users[socket.id] = { username, server };
     servers[server].push(username);
     socket.join(server);
-
     io.to(server).emit("updateUsers", servers[server]);
-    io.to(server).emit("userJoined", { username, server });
-
-    console.log(`✅ ${username} joined ${server}`);
   });
 
   socket.on("sendMessage", ({ server, message }) => {
-    if (users[socket.id]) {
-      io.to(server).emit("receiveMessage", {
-        user: users[socket.id].username,
-        message,
-      });
-    }
+    io.to(server).emit("receiveMessage", { user: users[socket.id].username, message });
+  });
+
+  socket.on("sendAudio", ({ server, fileUrl }) => {
+    io.to(server).emit("receiveAudio", { user: users[socket.id].username, fileUrl });
+  });
+
+  socket.on("callUser", ({ username, server }) => {
+    socket.to(server).emit("incomingCall", { from: username });
+  });
+
+  socket.on("answerCall", ({ to, offer }) => {
+    io.to(to).emit("callAccepted", { answer: offer });
   });
 
   socket.on("disconnect", () => {
     if (users[socket.id]) {
       let { username, server } = users[socket.id];
-
       servers[server] = servers[server].filter(user => user !== username);
       io.to(server).emit("updateUsers", servers[server]);
-      io.to(server).emit("userLeft", { username, server });
-
-      console.log(`🔴 ${username} disconnected from ${server}`);
       delete users[socket.id];
     }
   });
 });
 
 app.post("/upload", upload.single("file"), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ error: "No file uploaded" });
-  }
+  if (!req.file) return res.status(400).json({ error: "No file uploaded" });
 
   const { server, username } = req.body;
-  if (!server || !username) {
-    return res.status(400).json({ error: "Missing server or username" });
-  }
-
   const fileUrl = `/uploads/${req.file.filename}`;
-  io.to(server).emit("receiveFile", {
-    user: username,
-    fileUrl,
-    fileName: req.file.originalname,
-  });
+
+  let fileType = req.file.mimetype.startsWith("image/") ? "image" : "audio";
+
+  io.to(server).emit("receiveFile", { user: username, fileUrl, fileType });
 
   res.json({ fileUrl });
 });

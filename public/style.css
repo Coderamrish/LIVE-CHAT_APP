@@ -17,7 +17,7 @@ body {
 
 /* Header Styling */
 h1 {
-    font-size: 2.8rem;
+    font-size: 3rem;
     font-weight: bold;
     margin-bottom: 20px;
     color: #4facfe;
@@ -30,7 +30,7 @@ button {
     background: linear-gradient(135deg, #ff9a9e, #fad0c4);
     color: #1a1a2e;
     font-weight: 600;
-    padding: 12px 18px;
+    padding: 12px 20px;
     border: none;
     border-radius: 50px;
     box-shadow: 0 5px 15px rgba(255, 154, 158, 0.4);
@@ -48,7 +48,7 @@ button:hover {
 
 /* Chat Box */
 #chat-box {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(10px);
     width: 90%;
     max-width: 500px;
@@ -62,7 +62,7 @@ button:hover {
 
 /* Chat Messages */
 #chat-messages {
-    height: 250px;
+    height: 300px;
     overflow-y: auto;
     background: rgba(255, 255, 255, 0.15);
     padding: 15px;
@@ -94,24 +94,47 @@ button:hover {
     border: 2px solid #4facfe;
 }
 
-/* File Input */
-#fileInput {
-    width: 100%;
-    padding: 10px;
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.2);
+/* Voice & Video Call Buttons */
+#recordAudio {
+    background: linear-gradient(135deg, #ff4e50, #f9d423);
     color: white;
-    cursor: pointer;
-    margin-top: 10px;
 }
 
-/* Typing Indicator */
-#typing-indicator {
-    color: #ff758c;
-    font-style: italic;
-    font-size: 1rem;
-    font-weight: bold;
-    animation: typingAnimation 1.5s infinite;
+#recordAudio:hover {
+    background: linear-gradient(135deg, #d72638, #f9a825);
+}
+
+#startCall {
+    background: linear-gradient(135deg, #43cea2, #185a9d);
+    color: white;
+}
+
+#startCall:hover {
+    background: linear-gradient(135deg, #20bf55, #01baef);
+}
+
+/* Video Section */
+#video-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+    width: 100%;
+}
+
+video {
+    width: 90%;
+    max-width: 400px;
+    height: 220px;
+    border-radius: 15px;
+    background: black;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease-in-out;
+}
+
+video:hover {
+    transform: scale(1.05);
 }
 
 /* User List */
@@ -145,10 +168,4 @@ ul li:hover {
 @keyframes pulseGlow {
     0% { text-shadow: 0 0 15px rgba(79, 172, 254, 0.5); }
     100% { text-shadow: 0 0 25px rgba(79, 172, 254, 1); }
-}
-
-@keyframes typingAnimation {
-    0% { opacity: 0.2; }
-    50% { opacity: 0.6; }
-    100% { opacity: 1; }
 }

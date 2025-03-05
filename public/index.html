@@ -10,7 +10,7 @@
     <script defer src="script.js"></script>
 </head>
 <body>
-    <h1>Chat Application</h1>
+    <h1>Connectify</h1>
 
     <div>
         <button onclick="joinServer('Server 1')">Join Server 1</button>
@@ -19,13 +19,22 @@
 
     <div id="chat-box">
         <div id="chat-messages"></div>
-        <p id="typing-indicator"></p>
-        <input type="text" id="message" placeholder="Type a message..." />
+        <input type="text" id="message" placeholder="Type a message...">
         <button onclick="sendMessage()">Send</button>
-        <input type="file" id="fileInput" />
+        <button id="recordAudio">🎤 Hold to Record</button>
+        <button id="startCall">📞 Start Video Call</button>
+        <video id="localVideo" autoplay></video>
+        <video id="remoteVideo" autoplay></video>
     </div>
+    <div id="video-container">
+        <video id="localVideo" autoplay></video>
+        <video id="remoteVideo" autoplay></video>
+    </div>
+    <div id="online-users"></div>
+
 
     <h3>Users Online:</h3>
     <ul id="user-list"></ul>
+
 </body>
 </html>
