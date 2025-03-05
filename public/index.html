@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat App</title>
+    <link href="style.css" rel="stylesheet">
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <h1>Chat Application</h1>
+
+    <div>
+        <button onclick="joinServer('Server 1')">Join Server 1</button>
+        <button onclick="joinServer('Server 2')">Join Server 2</button>
+    </div>
+
+    <div id="chat-box">
+        <div id="chat-messages"></div>
+        <p id="typing-indicator"></p>
+        <input type="text" id="message" placeholder="Type a message..." />
+        <button onclick="sendMessage()">Send</button>
+        <input type="file" id="fileInput" />
+    </div>
+
+    <h3>Users Online:</h3>
+    <ul id="user-list"></ul>
+</body>
+</html>
