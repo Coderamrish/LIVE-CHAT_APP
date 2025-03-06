@@ -3,38 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat App</title>
+    <title>Connectify - Chat App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <link href="style.css" rel="stylesheet">
-
     <script src="/socket.io/socket.io.js"></script>
     <script defer src="script.js"></script>
 </head>
 <body>
-    <h1>Connectify</h1>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">Connectify</div>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
 
-    <div>
-        <button onclick="joinServer('Server 1')">Join Server 1</button>
-        <button onclick="joinServer('Server 2')">Join Server 2</button>
+    <!-- Main Content -->
+    <div id="home" class="container">
+        <header>
+            <h1>Welcome to Connectify</h1>
+            <p>Your modern chat application for seamless communication.</p>
+        </header>
+
+        <!-- Server Buttons -->
+        <div class="server-buttons">
+            <button onclick="joinServer('Server 1')">Join Server 1</button>
+            <button onclick="joinServer('Server 2')">Join Server 2</button>
+        </div>
+
+        <!-- Chat Box -->
+        <div id="chat-box">
+            <div id="chat-messages"></div>
+            <p id="typing-indicator"></p>
+            <div class="chat-input">
+                <input type="text" id="message" placeholder="Type a message...">
+                <button onclick="sendMessage()">Send</button>
+            </div>
+            <div class="chat-actions">
+                <button id="recordAudio">🎤 Hold to Record</button>
+                <button id="startCall">📞 Start Video Call</button>
+                <input type="file" id="fileInput">
+                <button onclick="sendFile()">Send File</button>
+            </div>
+        </div>
+
+        <!-- Video Container -->
+        <div id="video-container">
+            <video id="localVideo" autoplay muted></video>
+            <video id="remoteVideo" autoplay></video>
+        </div>
+
+        <!-- Online Users -->
+        <div id="online-users">
+            <h3>Users Online:</h3>
+            <ul id="user-list"></ul>
+        </div>
     </div>
 
-    <div id="chat-box">
-        <div id="chat-messages"></div>
-        <input type="text" id="message" placeholder="Type a message...">
-        <button onclick="sendMessage()">Send</button>
-        <button id="recordAudio">🎤 Hold to Record</button>
-        <button id="startCall">📞 Start Video Call</button>
-        <video id="localVideo" autoplay></video>
-        <video id="remoteVideo" autoplay></video>
-    </div>
-    <div id="video-container">
-        <video id="localVideo" autoplay></video>
-        <video id="remoteVideo" autoplay></video>
-    </div>
-    <div id="online-users"></div>
+    <!-- Services Section -->
+    <section id="services" class="services-section">
+        <h2>Our Services</h2>
+        <div class="service-box">
+            <h3>Instant Messaging</h3>
+            <p>Connect instantly with friends and colleagues.</p>
+        </div>
+        <div class="service-box">
+            <h3>Voice & Video Calls</h3>
+            <p>Enjoy high-quality voice and video calls.</p>
+        </div>
+        <div class="service-box">
+            <h3>File Sharing</h3>
+            <p>Send and receive files securely in real-time.</p>
+        </div>
+    </section>
 
+    <!-- About Section -->
+    <section id="about" class="about-section">
+        <h2>About Us</h2>
+        <p>Connectify is a modern chat application providing seamless messaging, calls, and file sharing.</p>
+    </section>
 
-    <h3>Users Online:</h3>
-    <ul id="user-list"></ul>
+    <!-- Contact Section -->
+    <section id="contact" class="contact-section">
+        <h2>Contact Us</h2>
+        <p>Email: support@connectify.com</p>
+        <p>Phone: +1 234 567 890</p>
+    </section>
 
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2025 Connectify. All rights reserved.</p>
+        <div class="social-links">
+            <a href="#">Facebook</a>
+            <a href="#">Twitter</a>
+            <a href="#">LinkedIn</a>
+        </div>
+    </footer>
 </body>
 </html>
